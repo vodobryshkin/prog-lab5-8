@@ -1,3 +1,1 @@
-id,name,coordinates_x,coordinates_y,creationDate,oscarsCount,genre,mpaaRating,operator_name,operator_height,operator_eyeColor,operator_hairColor,operator_nationality,operator_location_x,operator_location_y,operator_location_z
-1,1,2,3,2025-03-01,123,ACTION,G,vova,123,GREEN,RED,SPAIN,1,2.0,1
-2,g,1,2,2025-03-01,null,null,G,null,null,null,null,null,null,null,null
+
