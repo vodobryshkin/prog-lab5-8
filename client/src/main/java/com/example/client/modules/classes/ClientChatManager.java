@@ -1,15 +1,17 @@
 package com.example.client.modules.classes;
 
+import com.example.api.input.classes.input_manager.InputManager;
 import com.example.client.modules.enums.Status;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.util.Scanner;
 
 public class ClientChatManager implements Runnable {
     private final ClientLoopManager loopManager;
+    private final InputManager inputManager;
 
     public ClientChatManager(String host, int port, DatagramChannel channel, ByteBuffer buffer) {
+        inputManager = new InputManager();
         loopManager = new ClientLoopManager(new ClientSenderManager(host, port, channel, buffer),
                 new ClientReceiverManager(channel, buffer),
                 new ClientDescriptionManager(buffer));
@@ -17,10 +19,8 @@ public class ClientChatManager implements Runnable {
 
     @Override
     public void run() {
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            String message = scanner.nextLine();
+        while (inputManager.hasNext()) {
+            String message = inputManager.readNext();
 
             Status status = Status.REJECTED_RECEIVE;
 
