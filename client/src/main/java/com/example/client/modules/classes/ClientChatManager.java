@@ -29,13 +29,14 @@ public class ClientChatManager implements Runnable {
 
                 if (status == Status.REJECTED_RECEIVE) {
                     System.out.println("Error while receiving message \"" + message + "\" from server. Retry will be in 8 seconds.");
+                    try {
+                        Thread.sleep(8000);
+                    } catch (InterruptedException e) {
+                        System.err.println("Thread was interrupted: " + e.getMessage());
+                        Thread.currentThread().interrupt();
+                    }
                 }
-                try {
-                    Thread.sleep(8000);
-                } catch (InterruptedException e) {
-                    System.err.println("Thread was interrupted: " + e.getMessage());
-                    Thread.currentThread().interrupt();
-                }
+
 
             }
         }
