@@ -1,12 +1,14 @@
 package entities.enums;
 
+import java.io.Serializable;
+
 /**
  *  @author Добрышкин Владимир (vodobryshkin)
  *  @version 1.0
  *  @since 2025-22-02
  * Перечисление, представляющее возможные рейтинги MPAA для фильмов.
  */
-public enum MpaaRating {
+public enum MpaaRating implements Serializable {
     G,
     PG,
     PG_13,

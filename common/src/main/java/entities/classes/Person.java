@@ -5,6 +5,8 @@ import entities.enums.EyeColor;
 import entities.enums.HairColor;
 import entities.interfaces.WritableInCsv;
 
+import java.io.Serializable;
+
 /**
  * Класс Person представляет человека с такими атрибутами, как имя, рост, цвет глаз, цвет волос, национальность и местоположение.
  * Реализует интерфейс WritableInCsv для поддержки записи данных в CSV-формат.
@@ -13,7 +15,7 @@ import entities.interfaces.WritableInCsv;
  * @version 1.0
  * @since 2025-22-02
  */
-public class Person implements WritableInCsv {
+public class Person implements WritableInCsv, Serializable {
     private String name; // Поле не может быть null, строка не может быть пустой
     private int height; // Значение поля должно быть больше 0
     private EyeColor eyeColor; // Поле может быть null

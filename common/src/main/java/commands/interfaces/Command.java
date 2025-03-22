@@ -2,7 +2,9 @@ package commands.interfaces;
 
 import entities.classes.Movie;
 
-public interface Command {
+import java.io.Serializable;
+
+public interface Command extends Serializable {
     void execute(String arg, Movie movie);
     String describe();
 }
