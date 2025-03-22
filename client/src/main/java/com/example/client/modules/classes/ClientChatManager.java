@@ -23,7 +23,6 @@ public class ClientChatManager implements Runnable {
             String message = inputManager.readNext();
 
             Status status = Status.REJECTED_RECEIVE;
-
             while (status == Status.REJECTED_RECEIVE) {
                 status = loopManager.ask(message);
 
