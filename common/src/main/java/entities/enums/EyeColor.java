@@ -1,12 +1,14 @@
 package entities.enums;
 
+import java.io.Serializable;
+
 /**
  *  @author Добрышкин Владимир (vodobryshkin)
  *  @version 1.0
  *  @since 2025-22-02
  * Перечисление, представляющее возможные цвета глаз.
  */
-public enum EyeColor {
+public enum EyeColor implements Serializable {
     GREEN,
     BLACK,
     BLUE;

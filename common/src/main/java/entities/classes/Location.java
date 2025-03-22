@@ -2,13 +2,15 @@ package entities.classes;
 
 import entities.interfaces.WritableInCsv;
 
+import java.io.Serializable;
+
 /**
  •  @author Добрышкин Владимир (vodobryshkin)
  •  @version 1.0
  •  @since 2025-22-02
  • Класс, представляющий местоположение с координатами X, Y и Z.
  */
-public class Location implements WritableInCsv {
+public class Location implements WritableInCsv, Serializable {
     private Long x; // Поле не может быть null
     private Double y; // Поле не может быть null
     private long z;

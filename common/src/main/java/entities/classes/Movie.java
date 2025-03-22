@@ -1,5 +1,6 @@
 package entities.classes;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import entities.enums.MovieGenre;
 import entities.enums.MpaaRating;
@@ -13,7 +14,7 @@ import entities.interfaces.WritableInCsv;
  * @version 1.0
  * @since 2025-22-02
  */
-public class Movie implements WritableInCsv, Comparable<Movie> {
+public class Movie implements WritableInCsv, Comparable<Movie>, Serializable {
     /** Статическое поле для генерации уникального ID. */
     public static int nextId = 1;
 

@@ -2,13 +2,15 @@ package entities.classes;
 
 import entities.interfaces.WritableInCsv;
 
+import java.io.Serializable;
+
 /**
  *  @author Добрышкин Владимир (vodobryshkin)
  *  @version 1.0
  *  @since 2025-22-02
  * Класс, представляющий координаты объекта в двумерном пространстве.
  */
-public class Coordinates implements WritableInCsv {
+public class Coordinates implements WritableInCsv, Serializable {
     private long x; // Максимальное значение поля: 611
     private long y;
 
