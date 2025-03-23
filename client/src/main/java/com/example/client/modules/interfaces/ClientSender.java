@@ -1,5 +1,5 @@
 package com.example.client.modules.interfaces;
 
 public interface ClientSender {
-    void sendMessage(String message);
+    void sendMessage(byte[] message);
 }

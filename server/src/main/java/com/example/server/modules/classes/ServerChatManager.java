@@ -1,5 +1,7 @@
 package com.example.server.modules.classes;
 
+import com.example.repository.exceptions.KeyNotFoundException;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -26,7 +28,9 @@ public class ServerChatManager implements Runnable {
 
             try {
                 serverKeyAwaiterManager.awaitKeys();
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (KeyNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }

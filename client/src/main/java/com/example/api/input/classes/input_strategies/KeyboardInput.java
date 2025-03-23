@@ -25,17 +25,17 @@ public class KeyboardInput implements InputStrategy {
 
     /**
      * Проверка наличия данных для отправления в поток ввода данных.
-     * 
+     *
      * @return true/false
      */
     @Override
     public boolean hasNext() {
-        return scanner.hasNext();
+        return scanner.hasNextLine(); // Используем hasNextLine() вместо hasNext()
     }
-    
+
     /**
      * Отправка данных из потока ввода данных.
-     * 
+     *
      * @return String
      */
     @Override

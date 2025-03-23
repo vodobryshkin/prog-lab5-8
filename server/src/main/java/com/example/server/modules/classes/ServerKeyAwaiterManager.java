@@ -1,6 +1,13 @@
 package com.example.server.modules.classes;
 
+import com.example.commands.logic.CollectionManager;
+import com.example.commands.logic.CommandsManager;
+import com.example.commands.logic.Invoker;
+import com.example.repository.csv.CsvRepository;
+import com.example.repository.exceptions.KeyNotFoundException;
 import com.example.server.modules.interfaces.ServerKeyAwaiter;
+import domain.chat.classes.CommandBuffer;
+import domain.chat.classes.ServerAnswerBuffer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -16,16 +23,24 @@ public class ServerKeyAwaiterManager implements ServerKeyAwaiter {
     private final ServerReceiverManager serverReceiverManager;
     private final ServerDescriptionManager serverDescriptionManager;
 
+    private final CommandsManager commandsManager;
+    private final Invoker invoker;
+    private final CollectionManager collectionManager;
+
     public ServerKeyAwaiterManager(DatagramChannel channel, ByteBuffer buffer, Selector selector) {
         this.selector = selector;
 
         serverReceiverManager = new ServerReceiverManager(channel, buffer);
         serverSenderManager = new ServerSenderManager(channel, buffer);
         serverDescriptionManager = new ServerDescriptionManager(buffer);
+
+        collectionManager = new CollectionManager(new CsvRepository());
+        commandsManager = new CommandsManager(collectionManager);
+        invoker = new Invoker(commandsManager);
     }
 
     @Override
-    public void awaitKeys() throws IOException {
+    public void awaitKeys() throws IOException, ClassNotFoundException, KeyNotFoundException {
         Iterator<SelectionKey> keyIterator = selector.selectedKeys().iterator();
 
         while (keyIterator.hasNext()) {
@@ -35,14 +50,13 @@ public class ServerKeyAwaiterManager implements ServerKeyAwaiter {
             if (key.isReadable()) {
                 InetSocketAddress address = serverReceiverManager.receiveMessage();
 
-                String receivedMessage = serverDescriptionManager.decryptMessage();
+                CommandBuffer receivedMessage = serverDescriptionManager.decryptMessage();
 
-                ServerManager.logger.info("Received message from client {}: {}", address, receivedMessage);
+                ServerManager.logger.info("Received message from client {}: {}", address, receivedMessage.toString());
 
-                // Отправляем ответ клиенту
-                String responseMessage = "Эхо: " + receivedMessage;
+                ServerAnswerBuffer serverAnswerBuffer = invoker.getAnswer(receivedMessage);
 
-                serverSenderManager.sendMessage(address, responseMessage);
+                serverSenderManager.sendMessage(address, serverAnswerBuffer);
             }
         }
     }

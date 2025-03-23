@@ -21,9 +21,9 @@ public class ClientSenderManager implements ClientSender {
     }
 
     @Override
-    public void sendMessage(String message) {
+    public void sendMessage(byte[] message) {
         buffer.clear();
-        buffer.put(message.getBytes());
+        buffer.put(message);
         buffer.flip();
         try {
             channel.send(buffer, new InetSocketAddress(host, port));
