@@ -70,4 +70,5 @@ public interface Repository {
     int getSize();
 
     ArrayList<Movie> returnAll() throws KeyNotFoundException;
+    void clear();
 }

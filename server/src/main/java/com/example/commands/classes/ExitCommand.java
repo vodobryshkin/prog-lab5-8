@@ -4,7 +4,6 @@ import com.example.commands.interfaces.NoArgCommand;
 import com.example.commands.logic.CollectionManager;
 import com.example.repository.exceptions.KeyNotFoundException;
 import domain.chat.classes.ServerAnswerBuffer;
-import domain.chat.enums.AnswerStatus;
 import entities.classes.Movie;
 
 public class ExitCommand implements NoArgCommand {
@@ -16,8 +15,7 @@ public class ExitCommand implements NoArgCommand {
 
     @Override
     public ServerAnswerBuffer execute(String arg, Movie movie) throws KeyNotFoundException {
-        collectionManager.save();
-        return new ServerAnswerBuffer("exit", AnswerStatus.EXIT, null);
+        return collectionManager.exit();
     }
 
     @Override

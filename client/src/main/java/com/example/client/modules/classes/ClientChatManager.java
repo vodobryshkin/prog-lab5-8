@@ -1,6 +1,7 @@
 package com.example.client.modules.classes;
 
 import com.example.api.input.classes.input_manager.InputManager;
+import com.example.api.input.classes.input_strategies.KeyboardInput;
 import com.example.api.input_entities.exceptions.IncorrectInputException;
 import com.example.client.modules.enums.Status;
 import com.example.dataworker.classes.DataPreparationManager;
@@ -18,7 +19,7 @@ public class ClientChatManager implements Runnable {
     public ClientChatManager(String host, int port, DatagramChannel channel, ByteBuffer buffer) {
         loopManager = new ClientLoopManager(new ClientSenderManager(host, port, channel, buffer),
                 new ClientReceiverManager(channel, buffer),
-                new ClientDescriptionManager(buffer));
+                new ClientDescriptionManager(buffer, inputManager));
         dataPreparationManager = new DataPreparationManager();
     }
 
@@ -53,6 +54,10 @@ public class ClientChatManager implements Runnable {
                         Thread.currentThread().interrupt();
                     }
                 }
+            }
+
+            if (!inputManager.hasNext() && inputManager.toString().equals("FileInput")) {
+                inputManager.setInputStrategy(new KeyboardInput());
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.example;
+package com.example.client.modules;
 
 import com.example.client.modules.classes.ClientManager;
 

@@ -4,6 +4,8 @@ import com.example.api.input.classes.input_manager.InputManager;
 import com.example.api.input.classes.input_strategies.KeyboardInput;
 import com.example.api.input_entities.exceptions.IncorrectInputException;
 
+import java.util.Objects;
+
 /**
  * Класс NameBuilderDirector управляет процессом получения имени через 
  * NameBuilder и InputManager. Он обрабатывает ввод имени и управляет 
@@ -37,11 +39,24 @@ public class NameBuilderDirector {
     public String getName() throws IncorrectInputException {
         nameBuilder.reset();
 
-        if (!inputManager.toString().equals("FileInput")) {
-            System.out.println("Введите поле name.");
+        try {
+            if (!Objects.equals(inputManager.toString(), "FileInput")) {
+                System.out.println("Введите поле name (поле operator).");
+            }
+            nameBuilder.setString(inputManager.readNext());
+            return nameBuilder.getName();
+
+        } catch (IncorrectInputException e) {
+            if (inputManager.toString().equals("FileInput")) {
+                System.out.println(e.getMessage() + "Работа скрипта завершена.");
+                inputManager.setInputStrategy(new KeyboardInput());
+
+                return null;
+            } else {
+                System.out.println(e.getMessage() + "Повторите попытку ввода.");
+                return getName();
+            }
         }
-        nameBuilder.setString(inputManager.readNext());
-        return nameBuilder.getName();
 
     }
 }

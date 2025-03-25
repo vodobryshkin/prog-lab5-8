@@ -3,6 +3,7 @@ package domain.chat.enums;
 public enum AnswerStatus {
     OK,
     EXIT,
+    FILE,
     ERROR;
 
     @Override

@@ -152,4 +152,9 @@ public class CsvRepository implements Repository, ArrayManipulator {
     public ArrayList<Movie> returnAll() {
         return collection;
     }
+
+    @Override
+    public void clear() {
+        collection.clear();
+    }
 }

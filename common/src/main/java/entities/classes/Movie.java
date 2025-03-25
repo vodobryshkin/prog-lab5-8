@@ -1,6 +1,10 @@
 package entities.classes;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import entities.enums.MovieGenre;
 import entities.enums.MpaaRating;
@@ -16,7 +20,8 @@ import entities.interfaces.WritableInCsv;
  */
 public class Movie implements WritableInCsv, Comparable<Movie>, Serializable {
     /** Статическое поле для генерации уникального ID. */
-    public static int nextId = 1;
+    public static int nextId = 0;
+    private static final String CONFIG_FILE = "common/src/main/resources/id_config.txt";
 
     private int id; // Значение поля должно быть больше 0, уникальное и генерируется автоматически
     private String name; // Поле не может быть null, строка не может быть пустой
@@ -27,11 +32,39 @@ public class Movie implements WritableInCsv, Comparable<Movie>, Serializable {
     private MpaaRating mpaaRating; // Поле не может быть null
     private Person operator; // Поле может быть null
 
+    static {
+        loadIdFromFile();
+    }
+
+    public static void loadIdFromFile() {
+        try {
+            Path path = Paths.get(CONFIG_FILE);
+            if (Files.exists(path)) {
+                String content = Files.readString(path).trim();
+                nextId = Integer.parseInt(content);
+            }
+        } catch (IOException | NumberFormatException e) {
+            System.err.println("Error loading ID from file: " + e.getMessage());
+            // Можно установить значение по умолчанию или оставить текущее
+        }
+    }
+
+    public static void saveIdToFile() {
+        try {
+            Path path = Paths.get(CONFIG_FILE);
+            Files.writeString(path, String.valueOf(nextId + 1));
+        } catch (IOException e) {
+            System.err.println("Error saving ID to file: " + e.getMessage());
+        }
+    }
+
     /**
      * Конструктор по умолчанию. Инициализирует ID, дату создания и устанавливает необязательные поля в null.
      */
     public Movie() {
+        loadIdFromFile();
         this.id = nextId;
+        saveIdToFile();
         this.creationDate = LocalDate.now();
         this.genre = null;
         this.oscarsCount = null;
@@ -41,15 +74,15 @@ public class Movie implements WritableInCsv, Comparable<Movie>, Serializable {
     @Override
     public String toString() {
         return "Movie{" +
-               "id=" + id +
-               ", name=" + name +
-               ", coordinates=" + coordinates.toString() +
-               ", creationDate=" + creationDate +
-               ", oscarsCount=" + oscarsCount +
-               ", genre=" + genre +
-               ", mpaaRating=" + mpaaRating +
-               ", operator=" + operator +
-               '}';
+                "id=" + id +
+                ", name=" + name +
+                ", coordinates=" + coordinates.toString() +
+                ", creationDate=" + creationDate +
+                ", oscarsCount=" + oscarsCount +
+                ", genre=" + genre +
+                ", mpaaRating=" + mpaaRating +
+                ", operator=" + operator +
+                '}';
     }
 
     @Override
@@ -185,22 +218,12 @@ public class Movie implements WritableInCsv, Comparable<Movie>, Serializable {
     }
 
     /**
-     * Устанавливает следующее значение ID.
-     *
-     * @param nextId Следующее значение ID.
-     */
-    public static void setNextId(int nextId) {
-        Movie.nextId = nextId;
-    }
-
-    /**
-     * Устанавливает ID фильма и обновляет следующее значение ID.
+     * Устанавливает ID фильма.
      *
      * @param id ID фильма.
      */
     public void setId(int id) {
         this.id = id;
-        Movie.setNextId(id + 1);
     }
 
     /**
@@ -223,6 +246,8 @@ public class Movie implements WritableInCsv, Comparable<Movie>, Serializable {
         String[] params = movieString.split(",");
 
         movie.setId(Integer.parseInt(params[0]));
+        nextId = Integer.parseInt(params[0]);
+        saveIdToFile();
         movie.setName(params[1]);
         movie.setCoordinates(Coordinates.parseCoordinates(params[2], params[3]));
         movie.setCreationDate(LocalDate.parse(params[4]));

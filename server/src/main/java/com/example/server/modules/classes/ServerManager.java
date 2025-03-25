@@ -18,7 +18,7 @@ public class ServerManager implements Runnable {
     public ServerManager(int port) throws IOException {
         channel = DatagramChannel.open();
         selector = Selector.open();
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        ByteBuffer buffer = ByteBuffer.allocate(4096);
         serverConnectionManager = new ServerConnectionManager(port);
         serverChatManager = new ServerChatManager(channel, buffer, selector);
     }

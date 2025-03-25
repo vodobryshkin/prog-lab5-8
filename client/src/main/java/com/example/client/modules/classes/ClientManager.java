@@ -12,7 +12,7 @@ public class ClientManager implements Runnable {
 
     public ClientManager(String host, int port) throws IOException {
         channel = DatagramChannel.open();
-        buffer = ByteBuffer.allocate(1024);
+        buffer = ByteBuffer.allocate(4096);
         clientChatManager = new ClientChatManager(host, port, channel, buffer);
         clientConnectionManager = new ClientConnectionManager(host, port);
     }

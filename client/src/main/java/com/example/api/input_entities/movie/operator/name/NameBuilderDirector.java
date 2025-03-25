@@ -4,6 +4,8 @@ import com.example.api.input.classes.input_manager.InputManager;
 import com.example.api.input.classes.input_strategies.KeyboardInput;
 import com.example.api.input_entities.exceptions.IncorrectInputException;
 
+import java.util.Objects;
+
 /**
  * Директор для создания имени (name), используя NameBuilder.
  * Отвечает за последовательное построение имени на основе ввода пользователя.
@@ -32,7 +34,7 @@ public class NameBuilderDirector {
         nameBuilder.reset();
 
         try {
-            if (inputManager.toString() != "FileInput") {
+            if (!Objects.equals(inputManager.toString(), "FileInput")) {
                 System.out.println("Введите поле name (поле operator).");
             }
             nameBuilder.setString(inputManager.readNext());

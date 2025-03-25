@@ -1,14 +1,21 @@
 package com.example.commands.classes;
 
 import com.example.commands.interfaces.MovieArgCommand;
+import com.example.commands.logic.CollectionManager;
+import com.example.repository.exceptions.KeyNotFoundException;
 import domain.chat.classes.ServerAnswerBuffer;
 import entities.classes.Movie;
 
 public class RemoveLowerCommand implements MovieArgCommand {
-    @Override
-    public ServerAnswerBuffer execute(String arg, Movie movie) {
+    private final CollectionManager collectionManager;
 
-        return null;
+    public RemoveLowerCommand(CollectionManager collectionManager) {
+        this.collectionManager = collectionManager;
+    }
+
+    @Override
+    public ServerAnswerBuffer execute(String arg, Movie movie) throws KeyNotFoundException {
+        return collectionManager.removeLower(movie);
     }
 
     @Override

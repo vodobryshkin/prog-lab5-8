@@ -4,6 +4,7 @@ import com.example.api.input_entities.exceptions.IncorrectInputException;
 import com.example.api.input_entities.movie.MovieBuilderDirector;
 import com.example.client.modules.classes.ClientChatManager;
 import domain.chat.classes.CommandBuffer;
+import entities.classes.Movie;
 
 public class SerializeManager {
     private final CommandBuffer commandBuffer;
