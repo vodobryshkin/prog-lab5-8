@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.Selector;
+import java.sql.SQLException;
 
 public class ServerManager implements Runnable {
     private final ServerConnectionManager serverConnectionManager;
@@ -15,7 +16,7 @@ public class ServerManager implements Runnable {
     private final Selector selector;
     static final Logger logger = LoggerFactory.getLogger(ServerManager.class);
 
-    public ServerManager(int port) throws IOException {
+    public ServerManager(int port) throws IOException, SQLException {
         channel = DatagramChannel.open();
         selector = Selector.open();
         ByteBuffer buffer = ByteBuffer.allocate(4096);

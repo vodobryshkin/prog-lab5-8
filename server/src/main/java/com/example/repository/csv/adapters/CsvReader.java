@@ -19,13 +19,13 @@ import com.example.repository.interfaces.FileWorker;
 import com.example.repository.interfaces.Reader;
 
 public class CsvReader implements Reader, FileWorker {
-    private ArrayList<Movie> collection;
+    private final ArrayList<Movie> collection;
 
     /**
      * Конструктор по умолчанию. Инициализирует пустую коллекцию фильмов.
      */
     public CsvReader() {
-        collection = new ArrayList<Movie>();
+        collection = new ArrayList<>();
     }
 
     /**

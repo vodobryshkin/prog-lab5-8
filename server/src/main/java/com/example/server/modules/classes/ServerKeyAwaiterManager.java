@@ -5,6 +5,7 @@ import com.example.commands.logic.CommandsManager;
 import com.example.commands.logic.Invoker;
 import com.example.repository.csv.CsvRepository;
 import com.example.repository.exceptions.KeyNotFoundException;
+import com.example.repository.postgres.PostgresRepository;
 import com.example.server.modules.interfaces.ServerKeyAwaiter;
 import domain.chat.classes.CommandBuffer;
 import domain.chat.classes.ServerAnswerBuffer;
@@ -15,6 +16,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.sql.SQLException;
 import java.util.Iterator;
 
 public class ServerKeyAwaiterManager implements ServerKeyAwaiter {
@@ -27,14 +29,14 @@ public class ServerKeyAwaiterManager implements ServerKeyAwaiter {
     private final Invoker invoker;
     private final CollectionManager collectionManager;
 
-    public ServerKeyAwaiterManager(DatagramChannel channel, ByteBuffer buffer, Selector selector) {
+    public ServerKeyAwaiterManager(DatagramChannel channel, ByteBuffer buffer, Selector selector) throws SQLException {
         this.selector = selector;
 
         serverReceiverManager = new ServerReceiverManager(channel, buffer);
         serverSenderManager = new ServerSenderManager(channel, buffer);
         serverDescriptionManager = new ServerDescriptionManager(buffer);
 
-        collectionManager = new CollectionManager(new CsvRepository());
+        collectionManager = new CollectionManager(new PostgresRepository());
         commandsManager = new CommandsManager(collectionManager);
         invoker = new Invoker(commandsManager);
     }

@@ -12,5 +12,5 @@ import com.example.repository.exceptions.KeyNotFoundException;
  * @since 2025-22-02
  */
 public interface Writer {
-    public void write(CsvRepository csvRepository) throws KeyNotFoundException ;
+    void write(Repository repository) throws KeyNotFoundException ;
 }

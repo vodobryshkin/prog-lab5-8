@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import entities.enums.MovieGenre;
 import entities.enums.MpaaRating;
 import entities.interfaces.WritableInCsv;
+import entities.interfaces.WritableInSql;
 
 /**
  * Класс Movie представляет фильм с различными атрибутами, такими как название, жанр, рейтинг MPAA и другие.
@@ -18,7 +19,7 @@ import entities.interfaces.WritableInCsv;
  * @version 1.0
  * @since 2025-22-02
  */
-public class Movie implements WritableInCsv, Comparable<Movie>, Serializable {
+public class Movie implements WritableInCsv, WritableInSql, Comparable<Movie>, Serializable {
     /** Статическое поле для генерации уникального ID. */
     public static int nextId = 0;
     private static final String CONFIG_FILE = "common/src/main/resources/id_config.txt";
@@ -83,6 +84,29 @@ public class Movie implements WritableInCsv, Comparable<Movie>, Serializable {
                 ", mpaaRating=" + mpaaRating +
                 ", operator=" + operator +
                 '}';
+    }
+
+    @Override
+    public String toSql() {
+        String personSql = (operator != null) ? operator.toCsv() : null;
+
+        if (personSql == null) {
+            return coordinates.toSql() +
+                    "insert into movie(name, coordinates_id, creation_date, oscars_count, genre, " +
+                    "mpaa_rating) values ('" + name + "', " +
+                    "(select id from coordinates where (coordinates.x, coordinates.y) = (" + coordinates.toCsv() + ")), " +
+                    "'" + creationDate + "', " + oscarsCount + ", '" + genre + "', '" + mpaaRating + "');\n";
+        }
+
+        return operator.toSql() + coordinates.toSql() +
+                "insert into movie(name, coordinates_id, creation_date, oscars_count, genre, " +
+                "mpaa_rating, operator_id) values ('" + name + "', " +
+                "(select id from coordinates where (coordinates.x, coordinates.y) = (" + coordinates.toCsv() + ")), " +
+                "'" + creationDate + "', " + oscarsCount + ", '" + genre + "', '" + mpaaRating + "', " +
+                "(select id from person where (name, height, eye_color, hair_color, nationality) = " +
+                "('" + operator.getName() + "', " + operator.getHeight() + ", '" +
+                operator.getEyeColor() + "', '" + operator.getHairColor() + "', '" +
+                operator.getNationality() + "')));\n";
     }
 
     @Override

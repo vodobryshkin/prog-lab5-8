@@ -4,6 +4,7 @@ import entities.enums.Country;
 import entities.enums.EyeColor;
 import entities.enums.HairColor;
 import entities.interfaces.WritableInCsv;
+import entities.interfaces.WritableInSql;
 
 import java.io.Serializable;
 
@@ -15,7 +16,7 @@ import java.io.Serializable;
  * @version 1.0
  * @since 2025-22-02
  */
-public class Person implements WritableInCsv, Serializable {
+public class Person implements WritableInCsv, WritableInSql, Serializable {
     private String name; // Поле не может быть null, строка не может быть пустой
     private int height; // Значение поля должно быть больше 0
     private EyeColor eyeColor; // Поле может быть null
@@ -96,6 +97,20 @@ public class Person implements WritableInCsv, Serializable {
                ", nationality=" + nationality +
                ", location=" + (location != null ? location.toString() : null) +
                '}';
+    }
+
+    @Override
+    public String toSql() {
+        String locationSql = location != null ? location.toSql() : null;
+        if (locationSql == null) {
+            return "insert into person(name, height, eye_color, hair_color, nationality) values " +
+                    "('" + name + "', "  + height + ", '"  + eyeColor + "', '" + hairColor  + "', '" +
+                    nationality + "') on conflict on constraint pu do nothing;\n";
+        }
+        return locationSql + "insert into person(name, height, eye_color, hair_color, nationality, location_id) values " +
+                "('" + name + "', "  + height + ", '"  + eyeColor + "', '" + hairColor  + "', '" +
+                nationality + "', (select id from location where location.x = " + location.getX() + " and location.y = " +
+                location.getY() + " and location.z = " + location.getZ() + " )) on conflict on constraint pu do nothing;\n";
     }
 
     @Override

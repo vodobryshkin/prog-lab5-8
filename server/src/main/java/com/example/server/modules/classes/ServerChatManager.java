@@ -6,13 +6,14 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.Selector;
+import java.sql.SQLException;
 
 public class ServerChatManager implements Runnable {
     private final Selector selector;
     private final ServerKeyAwaiterManager serverKeyAwaiterManager;
 
 
-    public ServerChatManager(DatagramChannel channel, ByteBuffer buffer, Selector selector) {
+    public ServerChatManager(DatagramChannel channel, ByteBuffer buffer, Selector selector) throws SQLException {
         serverKeyAwaiterManager = new ServerKeyAwaiterManager(channel, buffer, selector);
         this.selector = selector;
     }

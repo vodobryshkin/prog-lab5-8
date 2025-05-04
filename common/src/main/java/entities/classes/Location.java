@@ -1,6 +1,7 @@
 package entities.classes;
 
 import entities.interfaces.WritableInCsv;
+import entities.interfaces.WritableInSql;
 
 import java.io.Serializable;
 
@@ -10,7 +11,7 @@ import java.io.Serializable;
  •  @since 2025-22-02
  • Класс, представляющий местоположение с координатами X, Y и Z.
  */
-public class Location implements WritableInCsv, Serializable {
+public class Location implements WritableInCsv, WritableInSql, Serializable {
     private Long x; // Поле не может быть null
     private Double y; // Поле не может быть null
     private long z;
@@ -27,6 +28,11 @@ public class Location implements WritableInCsv, Serializable {
            ", y=" + y +
            ", z=" + z +
            '}';
+    }
+
+    @Override
+    public String toSql() {
+        return "insert into location(x, y, z) values(" + x + ", " + y + ", " + z + ") on conflict on constraint lu do nothing;\n";
     }
 
     /**

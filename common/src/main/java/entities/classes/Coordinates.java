@@ -1,6 +1,7 @@
 package entities.classes;
 
 import entities.interfaces.WritableInCsv;
+import entities.interfaces.WritableInSql;
 
 import java.io.Serializable;
 
@@ -10,7 +11,7 @@ import java.io.Serializable;
  *  @since 2025-22-02
  * Класс, представляющий координаты объекта в двумерном пространстве.
  */
-public class Coordinates implements WritableInCsv, Serializable {
+public class Coordinates implements WritableInCsv, WritableInSql, Serializable {
     private long x; // Максимальное значение поля: 611
     private long y;
 
@@ -37,10 +38,15 @@ public class Coordinates implements WritableInCsv, Serializable {
     }
 
     /**
-     * Преобразует объект Coordinates в строковое представление в формате CSV.
+     * Преобразует объект Coordinates в строковое представление в формате SQL.
      *
      * @return Строка, содержащая значения координат X и Y, разделенные запятой.
      */
+    @Override
+    public String toSql() {
+        return "insert into coordinates(x, y) values(" + x + ", " + y + ") on conflict on constraint cu do nothing;\n";
+    }
+
     @Override
     public String toCsv() {
         return x + "," + y;

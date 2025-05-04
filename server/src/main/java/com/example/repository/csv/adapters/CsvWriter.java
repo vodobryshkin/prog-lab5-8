@@ -16,6 +16,7 @@ import com.example.repository.csv.CsvRepository;
 import com.example.repository.exceptions.FileNotFoundException;
 import com.example.repository.exceptions.KeyNotFoundException;
 import com.example.repository.interfaces.FileWorker;
+import com.example.repository.interfaces.Repository;
 import com.example.repository.interfaces.Writer;
 
 public class CsvWriter implements Writer, FileWorker {
@@ -23,19 +24,19 @@ public class CsvWriter implements Writer, FileWorker {
     /**
      * Записывает данные из репозитория в CSV-файл.
      * 
-     * @param csvRepository Репозиторий, содержащий данные для записи.
+     * @param repository Репозиторий, содержащий данные для записи.
      * @throws KeyNotFoundException Если ключ не найден в репозитории.
      */
     @Override
-    public void write(CsvRepository csvRepository) throws KeyNotFoundException {
+    public void write(Repository repository) throws KeyNotFoundException {
         try {
             String pathString = getPath();
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathString))) {
                 writer.write("id,name,coordinates_x,coordinates_y,creationDate,oscarsCount,genre,mpaaRating,operator_name,operator_height,operator_eyeColor,operator_hairColor,operator_nationality,operator_location_x,operator_location_y,operator_location_z");
                 writer.newLine();
-                for (int i = 0; i < csvRepository.getSize(); i++) {
-                    String data = csvRepository.getByIndex(i).toCsv();
+                for (int i = 0; i < repository.getSize(); i++) {
+                    String data = repository.getByIndex(i).toCsv();
                     writer.write(data);
                     writer.newLine();
                 }
