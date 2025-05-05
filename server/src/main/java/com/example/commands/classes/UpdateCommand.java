@@ -13,8 +13,8 @@ public class UpdateCommand implements AllArgCommand {
     }
 
     @Override
-    public ServerAnswerBuffer execute(String arg, Movie movie) {
-        return collectionManager.update(Integer.parseInt(arg), movie);
+    public ServerAnswerBuffer execute(String arg, Movie movie, String login, String password) {
+        return collectionManager.update(Integer.parseInt(arg), movie, login);
     }
 
     @Override

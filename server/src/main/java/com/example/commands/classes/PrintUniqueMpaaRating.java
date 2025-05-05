@@ -14,7 +14,7 @@ public class PrintUniqueMpaaRating implements NoArgCommand {
     }
 
     @Override
-    public ServerAnswerBuffer execute(String arg, Movie movie) throws KeyNotFoundException {
+    public ServerAnswerBuffer execute(String arg, Movie movie, String login, String password) throws KeyNotFoundException {
         return collectionManager.printUniqueMpaaRating();
     }
 

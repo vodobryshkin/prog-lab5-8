@@ -39,6 +39,11 @@ public class ClientDescriptionManager implements ClientDescriptor {
                 System.out.println(receivedObject.getComment());
             }
 
+            if ((receivedObject.getCommandName().equals("auth") || receivedObject.getCommandName().equals("register"))
+                    && receivedObject.getAnswerStatus() == AnswerStatus.OK) {
+                ClientChatManager.authorized = receivedObject.getComment();
+            }
+
             System.out.println(receivedObject);
 
             objectInputStream.close();

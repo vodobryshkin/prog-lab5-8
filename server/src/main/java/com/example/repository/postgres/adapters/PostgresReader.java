@@ -30,6 +30,7 @@ public class PostgresReader implements Reader {
              ResultSet resultSet = statement.executeQuery("select\n" +
                      "    m.id as id,\n" +
                      "    m.name as name,\n" +
+                     "    m.user_id as owner_id,\n" +
                      "    c.x as coordinates_x,\n" +
                      "    c.y as coordinates_y,\n" +
                      "    m.creation_date as creationDate,\n" +

@@ -5,7 +5,7 @@ import domain.chat.classes.ServerAnswerBuffer;
 import entities.classes.Movie;
 
 public interface Command {
-    ServerAnswerBuffer execute(String arg, Movie movie) throws KeyNotFoundException;
+    ServerAnswerBuffer execute(String arg, Movie movie, String login, String password) throws KeyNotFoundException;
     boolean check(String arg, Movie movie);
     String describe();
 }

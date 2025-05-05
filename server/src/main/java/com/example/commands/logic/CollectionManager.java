@@ -66,7 +66,10 @@ public class CollectionManager {
         return new ServerAnswerBuffer("info", AnswerStatus.OK, info);
     }
 
-    public ServerAnswerBuffer update(int id, Movie movie) {
+    public ServerAnswerBuffer update(int id, Movie movie, String login) {
+        if (!movie.getUserLogin().equals(login)) {
+            return new ServerAnswerBuffer("update", AnswerStatus.ERROR, "Недостаточно прав для этого действия.");
+        }
         try {
             boolean updated = repository.returnAll().stream()
                     .filter(m -> m.getId() == id)

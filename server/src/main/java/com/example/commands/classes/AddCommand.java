@@ -13,7 +13,7 @@ public class AddCommand implements MovieArgCommand {
     }
 
     @Override
-    public ServerAnswerBuffer execute(String arg, Movie movie) {
+    public ServerAnswerBuffer execute(String arg, Movie movie, String login, String password) {
         String name = "add";
         return collectionManager.add(name, movie);
     }

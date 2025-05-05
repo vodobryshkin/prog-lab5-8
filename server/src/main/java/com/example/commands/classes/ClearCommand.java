@@ -13,7 +13,7 @@ public class ClearCommand implements NoArgCommand {
     }
 
     @Override
-    public ServerAnswerBuffer execute(String arg, Movie movie) {
+    public ServerAnswerBuffer execute(String arg, Movie movie, String login, String password) {
         return collectionManager.clear();
     }
 

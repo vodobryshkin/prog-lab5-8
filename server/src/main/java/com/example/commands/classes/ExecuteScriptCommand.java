@@ -7,7 +7,7 @@ import entities.classes.Movie;
 
 public class ExecuteScriptCommand implements StringArgCommand {
     @Override
-    public ServerAnswerBuffer execute(String arg, Movie movie) {
+    public ServerAnswerBuffer execute(String arg, Movie movie, String login, String password) {
         return new ServerAnswerBuffer("execute_script", AnswerStatus.FILE, arg);
     }
 

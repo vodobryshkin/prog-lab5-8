@@ -13,7 +13,7 @@ public class RemoveByIdCommand implements StringArgCommand {
     }
 
     @Override
-    public ServerAnswerBuffer execute(String arg, Movie movie) {
+    public ServerAnswerBuffer execute(String arg, Movie movie, String login, String password) {
         return collectionManager.removeById(Integer.parseInt(arg));
     }
 

@@ -25,6 +25,7 @@ public class Movie implements WritableInCsv, WritableInSql, Comparable<Movie>, S
     private static final String CONFIG_FILE = "common/src/main/resources/id_config.txt";
 
     private int id; // Значение поля должно быть больше 0, уникальное и генерируется автоматически
+    private String userLogin = null; // id пользователя, которому принадлежит
     private String name; // Поле не может быть null, строка не может быть пустой
     private Coordinates coordinates; // Поле не может быть null
     private LocalDate creationDate; // Поле не может быть null, значение генерируется автоматически
@@ -35,6 +36,14 @@ public class Movie implements WritableInCsv, WritableInSql, Comparable<Movie>, S
 
     static {
         loadIdFromFile();
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+    }
+
+    public String getUserLogin() {
+        return userLogin;
     }
 
     public static void loadIdFromFile() {
@@ -76,6 +85,7 @@ public class Movie implements WritableInCsv, WritableInSql, Comparable<Movie>, S
     public String toString() {
         return "Movie{" +
                 "id=" + id +
+                "ownerLogin=" + userLogin +
                 ", name=" + name +
                 ", coordinates=" + coordinates.toString() +
                 ", creationDate=" + creationDate +
@@ -92,15 +102,15 @@ public class Movie implements WritableInCsv, WritableInSql, Comparable<Movie>, S
 
         if (personSql == null) {
             return coordinates.toSql() +
-                    "insert into movie(name, coordinates_id, creation_date, oscars_count, genre, " +
-                    "mpaa_rating) values ('" + name + "', " +
+                    "insert into movie(name, user_id, coordinates_id, creation_date, oscars_count, genre, " +
+                    "mpaa_rating) values ('" + name + "', (select id from users where login='" + userLogin + "'), " +
                     "(select id from coordinates where (coordinates.x, coordinates.y) = (" + coordinates.toCsv() + ")), " +
                     "'" + creationDate + "', " + oscarsCount + ", '" + genre + "', '" + mpaaRating + "');\n";
         }
 
         return operator.toSql() + coordinates.toSql() +
                 "insert into movie(name, coordinates_id, creation_date, oscars_count, genre, " +
-                "mpaa_rating, operator_id) values ('" + name + "', " +
+                "mpaa_rating, operator_id) values ('" + name + "', (select id from users where login='" + userLogin + "'), " +
                 "(select id from coordinates where (coordinates.x, coordinates.y) = (" + coordinates.toCsv() + ")), " +
                 "'" + creationDate + "', " + oscarsCount + ", '" + genre + "', '" + mpaaRating + "', " +
                 "(select id from person where (name, height, eye_color, hair_color, nationality) = " +

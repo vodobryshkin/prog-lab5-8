@@ -15,6 +15,7 @@ public class ClientChatManager implements Runnable {
     private final ClientLoopManager loopManager;
     public static final InputManager inputManager = new InputManager();
     private final DataPreparationManager dataPreparationManager;
+    public static String authorized=null;
 
     public ClientChatManager(String host, int port, DatagramChannel channel, ByteBuffer buffer) {
         loopManager = new ClientLoopManager(new ClientSenderManager(host, port, channel, buffer),

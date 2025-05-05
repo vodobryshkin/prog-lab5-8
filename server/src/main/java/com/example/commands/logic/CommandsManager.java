@@ -1,6 +1,7 @@
 package com.example.commands.logic;
 
 import com.example.commands.classes.*;
+import com.example.commands.db.UsersManager;
 import com.example.commands.interfaces.Command;
 
 import java.util.LinkedHashMap;
@@ -10,6 +11,8 @@ public class CommandsManager {
 
     public CommandsManager(CollectionManager collectionManager) {
         commands.put("help", new HelpCommand(commands));
+        commands.put("auth", new AuthCommand(new UsersManager()));
+        commands.put("register", new RegisterCommand(new UsersManager()));
         commands.put("info", new InfoCommand(collectionManager));
         commands.put("show", new ShowCommand(collectionManager));
         commands.put("add", new AddCommand(collectionManager));

@@ -16,7 +16,7 @@ public class HelpCommand implements NoArgCommand {
     }
 
     @Override
-    public ServerAnswerBuffer execute(String arg, Movie movie) {
+    public ServerAnswerBuffer execute(String arg, Movie movie, String login, String password) {
         StringBuilder helpMessage = new StringBuilder();
         helpMessage.append("\nВсе доступные команды:\n");
 
