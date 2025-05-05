@@ -22,6 +22,11 @@ public class DataPreparationManager {
             message += " " + authorized + " 1";
         }
         String[] tokens = message.split(" ");
+        try {
+            System.out.println(tokens[1]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
 
         try {
             return validateManager.check(tokens);

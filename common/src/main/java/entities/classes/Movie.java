@@ -62,7 +62,7 @@ public class Movie implements WritableInCsv, WritableInSql, Comparable<Movie>, S
     public static void saveIdToFile() {
         try {
             Path path = Paths.get(CONFIG_FILE);
-            Files.writeString(path, String.valueOf(nextId + 1));
+            Files.writeString(path, String.valueOf(nextId));
         } catch (IOException e) {
             System.err.println("Error saving ID to file: " + e.getMessage());
         }
@@ -72,9 +72,6 @@ public class Movie implements WritableInCsv, WritableInSql, Comparable<Movie>, S
      * Конструктор по умолчанию. Инициализирует ID, дату создания и устанавливает необязательные поля в null.
      */
     public Movie() {
-        loadIdFromFile();
-        this.id = nextId;
-        saveIdToFile();
         this.creationDate = LocalDate.now();
         this.genre = null;
         this.oscarsCount = null;
@@ -85,7 +82,7 @@ public class Movie implements WritableInCsv, WritableInSql, Comparable<Movie>, S
     public String toString() {
         return "Movie{" +
                 "id=" + id +
-                "ownerLogin=" + userLogin +
+                ", ownerLogin=" + userLogin +
                 ", name=" + name +
                 ", coordinates=" + coordinates.toString() +
                 ", creationDate=" + creationDate +
@@ -109,7 +106,7 @@ public class Movie implements WritableInCsv, WritableInSql, Comparable<Movie>, S
         }
 
         return operator.toSql() + coordinates.toSql() +
-                "insert into movie(name, coordinates_id, creation_date, oscars_count, genre, " +
+                "insert into movie(name, user_id, coordinates_id, creation_date, oscars_count, genre, " +
                 "mpaa_rating, operator_id) values ('" + name + "', (select id from users where login='" + userLogin + "'), " +
                 "(select id from coordinates where (coordinates.x, coordinates.y) = (" + coordinates.toCsv() + ")), " +
                 "'" + creationDate + "', " + oscarsCount + ", '" + genre + "', '" + mpaaRating + "', " +
@@ -280,15 +277,16 @@ public class Movie implements WritableInCsv, WritableInSql, Comparable<Movie>, S
         String[] params = movieString.split(",");
 
         movie.setId(Integer.parseInt(params[0]));
-        nextId = Integer.parseInt(params[0]);
+        nextId = movie.getId() + 1;
         saveIdToFile();
         movie.setName(params[1]);
-        movie.setCoordinates(Coordinates.parseCoordinates(params[2], params[3]));
-        movie.setCreationDate(LocalDate.parse(params[4]));
-        movie.setOscarsCount(params[5].equals("null") ? null : Long.parseLong(params[5]));
-        movie.setGenre(MovieGenre.parseGenre(params[6]));
-        movie.setMpaaRating(MpaaRating.parseMpaaRating(params[7]));
-        movie.setOperator(Person.parsePerson(params[8], params[9], params[10], params[11], params[12], params[13], params[14], params[15]));
+        movie.setUserLogin(params[2]);
+        movie.setCoordinates(Coordinates.parseCoordinates(params[3], params[4]));
+        movie.setCreationDate(LocalDate.parse(params[5]));
+        movie.setOscarsCount(params[6].equals("null") ? null : Long.parseLong(params[6]));
+        movie.setGenre(MovieGenre.parseGenre(params[7]));
+        movie.setMpaaRating(MpaaRating.parseMpaaRating(params[8]));
+        movie.setOperator(Person.parsePerson(params[9], params[10], params[11], params[12], params[13], params[14], params[15], params[16]));
 
         return movie;
     }

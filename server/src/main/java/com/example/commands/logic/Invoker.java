@@ -12,6 +12,7 @@ public class Invoker {
     }
 
     public ServerAnswerBuffer getAnswer(CommandBuffer commandBuffer) throws KeyNotFoundException {
+        System.out.println(commandBuffer.getArg());
         return commandsManager.get(commandBuffer.getCommandName()).execute(commandBuffer.getArg(), commandBuffer.getMovie(), commandBuffer.getLogin(), commandBuffer.getPassword());
     }
 }

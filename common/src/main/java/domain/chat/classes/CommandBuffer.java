@@ -57,9 +57,10 @@ public class CommandBuffer implements Serializable {
 
     @Override
     public String toString() {
+        System.out.println(this.commandName + " " + this.login + " " + this.password + " " + this.arg + " " + this.movie);
         if (movie != null) {
-            return this.commandName + " " + this.login + this.password + this.arg + " " + this.movie;
+            return this.commandName + " " + this.login + " " + this.password + " " + this.arg + " " + this.movie;
         }
-        return this.commandName + " " + this.login + this.password + this.arg;
+        return this.commandName + " " + this.login + " " + this.password + " " + this.arg + " " + this.movie;
     }
 }

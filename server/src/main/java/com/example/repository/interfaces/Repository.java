@@ -27,7 +27,7 @@ public interface Repository {
      *
      * @param movie объект Movie для добавления
      */
-    void add(Movie movie);
+    void add(Movie movie) throws KeyNotFoundException;
 
     /**
      * Обновляет объект Movie с указанным идентификатором.

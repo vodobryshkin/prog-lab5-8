@@ -17,7 +17,7 @@ public class CollectionManager {
         this.repository = repository;
     }
 
-    public ServerAnswerBuffer add(String commandName, Movie movie) {
+    public ServerAnswerBuffer add(String commandName, Movie movie) throws KeyNotFoundException {
         repository.add(movie);
         return new ServerAnswerBuffer(commandName, AnswerStatus.OK, "Элемент был добавлен в коллекцию.");
     }
@@ -66,8 +66,9 @@ public class CollectionManager {
         return new ServerAnswerBuffer("info", AnswerStatus.OK, info);
     }
 
-    public ServerAnswerBuffer update(int id, Movie movie, String login) {
-        if (!movie.getUserLogin().equals(login)) {
+    public ServerAnswerBuffer update(int id, Movie movie) throws KeyNotFoundException {
+        if (!movie.getUserLogin().equals(repository.returnAll().get(id).getUserLogin())) {
+            System.out.printf("%s %s\n", movie.getUserLogin(), repository.returnAll().get(id).getUserLogin());
             return new ServerAnswerBuffer("update", AnswerStatus.ERROR, "Недостаточно прав для этого действия.");
         }
         try {
@@ -82,6 +83,7 @@ public class CollectionManager {
                             throw new RuntimeException(e);
                         }
                         try {
+                            movie.setId(repository.returnAll().get(index).getId());
                             repository.returnAll().set(index, movie);
                         } catch (KeyNotFoundException e) {
                             throw new RuntimeException(e);

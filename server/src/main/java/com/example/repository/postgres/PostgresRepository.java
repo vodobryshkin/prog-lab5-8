@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PostgresRepository  implements Repository, ArrayManipulator {
-    private final ArrayList<Movie> collection;
+    private ArrayList<Movie> collection;
     private final PostgresWriter postgresWriter;
 
     public PostgresRepository() throws SQLException {
@@ -42,8 +42,10 @@ public class PostgresRepository  implements Repository, ArrayManipulator {
      * @param movie Объект {@link Movie} для добавления.
      */
     @Override
-    public void add(Movie movie) {
+    public void add(Movie movie) throws KeyNotFoundException {
         collection.add(movie);
+        new PostgresWriter().write(this);
+        collection = new PostgresReader().read();
     }
 
     /**

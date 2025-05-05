@@ -51,6 +51,7 @@ public class SerializeManager {
         if (neededFlags[1]) {
             Movie movie = new MovieBuilderDirector(ClientChatManager.inputManager).inputMovie();
             movie.setUserLogin(authorized);
+            commandBuffer.setLogin(authorized);
             commandBuffer.setMovie(movie);
         }
 

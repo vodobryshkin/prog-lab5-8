@@ -30,7 +30,7 @@ public class PostgresReader implements Reader {
              ResultSet resultSet = statement.executeQuery("select\n" +
                      "    m.id as id,\n" +
                      "    m.name as name,\n" +
-                     "    m.user_id as owner_id,\n" +
+                     "    u.login as login,\n" +
                      "    c.x as coordinates_x,\n" +
                      "    c.y as coordinates_y,\n" +
                      "    m.creation_date as creationDate,\n" +
@@ -52,7 +52,9 @@ public class PostgresReader implements Reader {
                      "        left join\n" +
                      "    person p on m.operator_id = p.id\n" +
                      "        left join\n" +
-                     "    location l on p.location_id = l.id;")) {
+                     "    location l on p.location_id = l.id" +
+                     "        join\n" +
+                     "    users u on m.user_id = u.id;")) {
 
             // Получаем метаданные результата (информацию о колонках)
             ResultSetMetaData metaData = resultSet.getMetaData();

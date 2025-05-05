@@ -38,9 +38,9 @@ public class CsvReader implements Reader, FileWorker {
         try {
             String pathString = getPath();
             try (BufferedReader reader = new BufferedReader(new FileReader(pathString))) {
-                String line;
+                String line = "";
                 reader.readLine(); // Пропуск заголовка
-
+                System.out.println(line);
                 while ((line = reader.readLine()) != null) {
                     collection.add(Movie.parseMovie(line));
                 }

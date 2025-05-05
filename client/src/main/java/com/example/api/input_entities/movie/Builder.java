@@ -52,6 +52,7 @@ public class Builder implements MovieBuilder {
     @Override
     public void reset() {
         movie = new Movie();
+        movie.setId(Movie.nextId++);
     }
 
     /**

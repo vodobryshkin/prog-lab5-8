@@ -2,6 +2,7 @@ package com.example.commands.classes;
 
 import com.example.commands.interfaces.AllArgCommand;
 import com.example.commands.logic.CollectionManager;
+import com.example.repository.exceptions.KeyNotFoundException;
 import domain.chat.classes.ServerAnswerBuffer;
 import entities.classes.Movie;
 
@@ -13,8 +14,9 @@ public class UpdateCommand implements AllArgCommand {
     }
 
     @Override
-    public ServerAnswerBuffer execute(String arg, Movie movie, String login, String password) {
-        return collectionManager.update(Integer.parseInt(arg), movie, login);
+    public ServerAnswerBuffer execute(String arg, Movie movie, String login, String password) throws KeyNotFoundException {
+        System.out.println(arg);
+        return collectionManager.update(Integer.parseInt(arg), movie);
     }
 
     @Override

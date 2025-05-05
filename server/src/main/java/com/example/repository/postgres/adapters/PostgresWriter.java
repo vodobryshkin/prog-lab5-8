@@ -26,7 +26,7 @@ public class PostgresWriter implements Writer {
              ResultSet resultSet = statement.executeQuery("drop table if exists movie;\n" +
                      "create table movie (\n" +
                      "                       id serial primary key,\n" +
-                     "                       user_id integer references users(id) default null,\n" +
+                     "                       user_id integer references users(id),\n" +
                      "                       name varchar(32) not null check (name != ''),\n" +
                      "                       coordinates_id integer references coordinates(id) not null,\n" +
                      "                       creation_date date not null default current_timestamp,\n" +
