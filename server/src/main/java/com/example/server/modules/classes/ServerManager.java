@@ -14,12 +14,10 @@ public class ServerManager implements Runnable {
     private final ServerChatManager serverChatManager;
     private final DatagramChannel channel;
     private final Selector selector;
-    private final ForkJoinPool requestProcessingPool;
 
     static final Logger logger = LoggerFactory.getLogger(ServerManager.class);
 
     public ServerManager(int port, ForkJoinPool requestProcessingPool) throws IOException, SQLException {
-        this.requestProcessingPool = requestProcessingPool;
         channel = DatagramChannel.open();
         selector = Selector.open();
         ByteBuffer buffer = ByteBuffer.allocate(4096);

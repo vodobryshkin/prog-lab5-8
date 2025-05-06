@@ -15,7 +15,6 @@ public class UpdateCommand implements AllArgCommand {
 
     @Override
     public ServerAnswerBuffer execute(String arg, Movie movie, String login, String password) throws KeyNotFoundException {
-        System.out.println(arg);
         return collectionManager.update(Integer.parseInt(arg), movie);
     }
 

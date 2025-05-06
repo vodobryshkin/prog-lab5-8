@@ -7,7 +7,7 @@ import domain.chat.classes.ServerAnswerBuffer;
 import entities.classes.Movie;
 
 public class RegisterCommand implements Command {
-    private UsersManager usersManager;
+    private final UsersManager usersManager;
 
     public RegisterCommand(UsersManager usersManager) {
         this.usersManager = usersManager;

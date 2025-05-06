@@ -60,12 +60,10 @@ public class ServerKeyAwaiterManager implements ServerKeyAwaiter {
 
                 ServerManager.logger.info("Received message from client {}: {}", address, receivedMessage.toString());
 
-                // Обработка запроса в отдельном потоке ForkJoinPool
                 requestProcessingPool.execute(() -> {
                     try {
                         ServerAnswerBuffer serverAnswerBuffer = invoker.getAnswer(receivedMessage);
 
-                        // Отправка ответа через CachedThreadPool
                         responseSenderExecutor.submitTask(() -> {
                             try {
                                 serverSenderManager.sendMessage(address, serverAnswerBuffer);
@@ -81,7 +79,9 @@ public class ServerKeyAwaiterManager implements ServerKeyAwaiter {
         }
     }
 
-    // Внутренний класс для управления отправкой ответов
+    /**
+     * Внутренний класс для управления отправкой ответов
+     */
     private static class ExecutorResponseSender {
         private final ExecutorService executor = Executors.newCachedThreadPool();
 

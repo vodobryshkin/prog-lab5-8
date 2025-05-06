@@ -42,8 +42,6 @@ public class PostgresWriter implements Writer {
                  Statement statement = connection.createStatement();
                  ResultSet resultSet = statement.executeQuery(repository.getByIndex(i).toSql())) {}
             catch (SQLException e) {
-                System.err.println("Ошибка при работе с PostgreSQL:");
-                e.printStackTrace();
             }
         }
 
