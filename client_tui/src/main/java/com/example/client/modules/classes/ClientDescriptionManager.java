@@ -44,10 +44,10 @@ public class ClientDescriptionManager implements ClientDescriptor {
                 ClientChatManager.authorized = receivedObject.getComment();
             }
 
-            System.out.println(receivedObject);
-
             objectInputStream.close();
             byteArrayInputStream.close();
+
+            System.out.println(receivedObject);
 
         } catch (Exception e) {
             e.printStackTrace();
