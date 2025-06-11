@@ -15,9 +15,9 @@ import java.sql.SQLException;
 import java.util.Base64;
 
 public class UsersManager {
-    private final String DB_URL = "jdbc:postgresql://localhost:5433/studs";
+    private final String DB_URL = "URL";
     private final String DB_USER = "s465774";
-    private final String DB_PASSWORD = "7pmr4QtqCjSDZcwq";
+    private final String DB_PASSWORD = "PASSWORD";
 
     private static final int SALT_LENGTH = 16; // 16 bytes = 24 symbols in Base64
 
