@@ -49,7 +49,7 @@ public class CollectionManager {
 
     public ServerAnswerBuffer show() throws KeyNotFoundException {
         String result = repository.returnAll().stream()
-                .map(m -> m.toString() + "\n")
+                .map(m -> m.toCsv() + "\n")
                 .collect(Collectors.joining());
         return new ServerAnswerBuffer("show", AnswerStatus.OK, "\n" + result);
     }

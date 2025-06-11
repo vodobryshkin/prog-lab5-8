@@ -1,7 +1,10 @@
 package com.example.gui_client.auth;
 
 import com.example.gui_client.GuiApp;
+import com.example.gui_client.main.MainApp;
 import domain.chat.classes.CommandBuffer;
+import domain.chat.classes.ServerAnswerBuffer;
+import domain.chat.enums.AnswerStatus;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
@@ -38,8 +41,9 @@ public class AuthController {
     @FXML private Text registInputPasswordText;
 
     private ResourceBundle bundle;
-    private Locale currentLocale;
     private Stage primaryStage;
+    private boolean noError = true;
+    private boolean noRegError = true;
 
     public void setStage(Stage stage) {
         this.primaryStage = stage;
@@ -47,7 +51,8 @@ public class AuthController {
 
     @FXML
     private void initialize() {
-        changeLanguage(new Locale("ru"));
+        // Используем глобальную переменную для инициализации
+        changeLanguage(GuiApp.getCurrentLocale());
 
         authButton.setOnAction(event -> {
             try {
@@ -55,6 +60,8 @@ public class AuthController {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
@@ -64,6 +71,8 @@ public class AuthController {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
@@ -77,7 +86,8 @@ public class AuthController {
     }
 
     private void changeLanguage(Locale locale) {
-        currentLocale = locale;
+        // Обновляем глобальную переменную
+        GuiApp.setCurrentLocale(locale);
         bundle = ResourceBundle.getBundle("com.example.gui_client.messages", locale);
         updateUI();
     }
@@ -107,27 +117,64 @@ public class AuthController {
         lithuanianMenuItem.setText(bundle.getString("lithuanian"));
         mexicanMenuItem.setText(bundle.getString("mexican"));
 
+        if (!noError) {
+            authErrorMessage.setText(bundle.getString("auth_error"));
+        }
+
+        if (!noRegError) {
+            registErrorMessage.setText(bundle.getString("reg_error"));
+        }
+
         if (primaryStage != null) {
             primaryStage.setTitle(bundle.getString("window_title"));
         }
     }
 
-    private void handleAuth() throws IOException, ClassNotFoundException {
+    private void handleAuth() throws Exception {
         CommandBuffer message = new CommandBuffer("auth");
         String login = authInputLoginTextField.getText();
         String password = authInputPasswordTextField.getText();
         message.setLogin(login);
         message.setPassword(password);
-        GuiApp.udpClient.sendCommand(message);
+        ServerAnswerBuffer answer = GuiApp.udpClient.sendCommand(message);
+
+        if (answer.getAnswerStatus() != AnswerStatus.OK) {
+            authErrorMessage.setText(bundle.getString("auth_error"));
+            noError = false;
+        } else {
+            authErrorMessage.setText("");
+            GuiApp.authorized = true;
+            noError = true;
+            GuiApp.username = login;
+            MainApp app = new MainApp();
+            app.start(new Stage());
+            closeWindow();
+        }
     }
 
-    private void handleRegistration() throws IOException, ClassNotFoundException {
+    private void handleRegistration() throws Exception {
         CommandBuffer message = new CommandBuffer("register");
         String login = registInputLoginTextField.getText();
         String password = registInputPasswordTextField.getText();
         message.setLogin(login);
         message.setPassword(password);
-        GuiApp.udpClient.sendCommand(message);
+        ServerAnswerBuffer answer = GuiApp.udpClient.sendCommand(message);
+        if (answer.getAnswerStatus() != AnswerStatus.OK) {
+            registErrorMessage.setText(bundle.getString("reg_error"));
+            noRegError = false;
+        } else {
+            GuiApp.username = login;
+            noRegError = true;
+            GuiApp.authorized = true;
+            registErrorMessage.setText("");
+            MainApp app = new MainApp();
+            app.start(new Stage());
+            closeWindow();
+        }
+    }
+
+    private void closeWindow() {
+        primaryStage.close();
     }
 
     private void switchToRegistration() {

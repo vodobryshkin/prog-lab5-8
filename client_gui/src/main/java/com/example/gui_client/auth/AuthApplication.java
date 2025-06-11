@@ -1,18 +1,21 @@
 package com.example.gui_client.auth;
 
+import com.example.gui_client.GuiApp;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class AuthApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Locale defaultLocale = new Locale("ru");
-        ResourceBundle bundle = ResourceBundle.getBundle("com.example.gui_client.messages", defaultLocale);
+        // Используем глобальную переменную для языка
+        ResourceBundle bundle = ResourceBundle.getBundle(
+                "com.example.gui_client.messages",
+                GuiApp.getCurrentLocale()
+        );
 
         FXMLLoader fxmlLoader = new FXMLLoader(
                 AuthApplication.class.getResource("/com/example/gui_client/auth.fxml"),

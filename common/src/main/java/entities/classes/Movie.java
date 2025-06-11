@@ -119,7 +119,7 @@ public class Movie implements WritableInCsv, WritableInSql, Comparable<Movie>, S
     @Override
     public String toCsv() {
         String personCsv = (operator != null) ? operator.toCsv() : null + "," + null + "," + null + "," + null + "," + null + "," + null + "," + null + "," + null;
-        return id + "," + name + "," + coordinates.toCsv() + "," + creationDate + "," + oscarsCount + "," + genre + "," + mpaaRating + "," + personCsv;
+        return id + "," + userLogin + "," + name + "," + coordinates.toCsv() + "," + creationDate + "," + oscarsCount + "," + genre + "," + mpaaRating + "," + personCsv;
     }
 
     /**

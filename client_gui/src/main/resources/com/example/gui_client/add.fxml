@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="698.0" prefWidth="446.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gui_client.add.MovieInputController">
+   <children>
+      <GridPane layoutX="14.0" layoutY="51.0" prefHeight="444.0" prefWidth="413.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="228.0" minWidth="10.0" prefWidth="200.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="207.0" minWidth="10.0" prefWidth="200.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Text fx:id="nameEnterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Название:" textAlignment="RIGHT" wrappingWidth="182.18000030517578">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="coordinatesEnterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Координаты:" textAlignment="RIGHT" wrappingWidth="182.18000030517578" GridPane.rowIndex="1">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="oscarsEnterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Кол-во оскаров:" textAlignment="RIGHT" wrappingWidth="182.18000030517578" GridPane.rowIndex="2">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="genreEnterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Жанр:" textAlignment="RIGHT" wrappingWidth="182.18000030517578" GridPane.rowIndex="3">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="mpaaEnterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Ограничение:" textAlignment="RIGHT" wrappingWidth="182.18000030517578" GridPane.rowIndex="4">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="nameOperatorEnterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Имя оператора:" textAlignment="RIGHT" wrappingWidth="182.18000030517578" GridPane.rowIndex="5">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="heightOperatorEnterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Рост оператора:" textAlignment="RIGHT" wrappingWidth="182.18000030517578" GridPane.rowIndex="6">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="eyeColorOperatorEnterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Цвет глаз оператора:" textAlignment="CENTER" wrappingWidth="207.18000030517578" GridPane.rowIndex="7">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="hairColorOperatorEnterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Цвет волос оператора:" textAlignment="CENTER" wrappingWidth="203.18000030517578" GridPane.rowIndex="8">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="countryOperatorEnterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Страна оператора:" textAlignment="RIGHT" wrappingWidth="182.18000030517578" GridPane.rowIndex="9">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="locationOperatorEnterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Локация оператора:" textAlignment="RIGHT" wrappingWidth="182.18000030517578" GridPane.rowIndex="10">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <TextField fx:id="nameEnterTextField" GridPane.columnIndex="1" />
+            <TextField fx:id="oscarsEnterTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="nameOperatorEnterTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="heightOperatorEnterTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <ChoiceBox fx:id="genreChoiceBox" prefHeight="26.0" prefWidth="206.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ChoiceBox fx:id="mpaaChoiceBox" prefHeight="26.0" prefWidth="208.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ChoiceBox fx:id="eyeColorOperatorChoiceBox" prefHeight="26.0" prefWidth="206.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <ChoiceBox fx:id="hairColorOperatorChoiceBox" prefHeight="26.0" prefWidth="207.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <ChoiceBox fx:id="countryOperatorChoiceBox" prefHeight="26.0" prefWidth="208.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <GridPane prefHeight="60.0" prefWidth="127.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="X" textAlignment="CENTER" wrappingWidth="105.13000106811523">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Y" textAlignment="CENTER" wrappingWidth="107.13000106811523" GridPane.columnIndex="1">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <TextField GridPane.rowIndex="1" fx:id="xCooedEnterTextField" />
+                  <TextField fx:id="yCoordEnterTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+            <GridPane prefHeight="60.0" prefWidth="127.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="X" textAlignment="CENTER" wrappingWidth="67.13000106811523">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Y" textAlignment="CENTER" wrappingWidth="68.13000106811523" GridPane.columnIndex="1">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <TextField GridPane.rowIndex="1" fx:id="xLocOperatorEnterTextField" />
+                  <TextField fx:id="yLocOperatorEnterTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Z" textAlignment="CENTER" wrappingWidth="67.00800037384033" GridPane.columnIndex="2">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="zLocOperatorEnterTextField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+         </children>
+      </GridPane>
+      <Text fx:id="introText" layoutX="15.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Введите информацию о фильме:" textAlignment="CENTER" wrappingWidth="400.1800003051758">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <GridPane layoutX="15.0" layoutY="506.0" prefHeight="193.0" prefWidth="407.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <CheckBox fx:id="oscarCheckBox" mnemonicParsing="false" text="Вводить количество оскаров" />
+            <CheckBox fx:id="genreCheckBox" mnemonicParsing="false" text="Вводить жанр фильма" GridPane.rowIndex="1" />
+            <CheckBox fx:id="operatorCheckBox" mnemonicParsing="false" text="Вводить информацию об операторе" GridPane.rowIndex="2" />
+            <CheckBox fx:id="eyeColorCheckBox" mnemonicParsing="false" text="Вводить цвет глаз оператора" GridPane.rowIndex="3" />
+            <CheckBox fx:id="countryCheckBox" mnemonicParsing="false" text="Вводить страну оператора" GridPane.rowIndex="4" />
+            <CheckBox fx:id="locationCheckBox" mnemonicParsing="false" text="Вводить локацию оператора" GridPane.rowIndex="5" />
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
