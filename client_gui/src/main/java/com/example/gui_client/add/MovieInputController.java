@@ -267,6 +267,62 @@ public class MovieInputController implements Initializable {
         return person;
     }
 
+    public void populateFields(Movie movie) {
+        // Основные данные фильма
+        nameEnterTextField.setText(movie.getName());
+
+        Coordinates coordinates = movie.getCoordinates();
+        if (coordinates != null) {
+            xCooedEnterTextField.setText(String.valueOf(coordinates.getX()));
+            yCoordEnterTextField.setText(String.valueOf(coordinates.getY()));
+        }
+
+        mpaaChoiceBox.setValue(movie.getMpaaRating());
+
+        if (movie.getOscarsCount() != null) {
+            oscarCheckBox.setSelected(true);
+            oscarsEnterTextField.setText(String.valueOf(movie.getOscarsCount()));
+        }
+        updateOscarFields();
+
+        if (movie.getGenre() != null) {
+            genreCheckBox.setSelected(true);
+            genreChoiceBox.setValue(movie.getGenre());
+        }
+        updateGenreFields();
+
+        // Данные оператора
+        Person operator = movie.getOperator();
+        if (operator != null) {
+            operatorCheckBox.setSelected(true);
+            nameOperatorEnterTextField.setText(operator.getName());
+            heightOperatorEnterTextField.setText(String.valueOf(operator.getHeight()));
+            hairColorOperatorChoiceBox.setValue(operator.getHairColor());
+
+            if (operator.getEyeColor() != null) {
+                eyeColorCheckBox.setSelected(true);
+                eyeColorOperatorChoiceBox.setValue(operator.getEyeColor());
+            }
+
+            if (operator.getNationality() != null) {
+                countryCheckBox.setSelected(true);
+                countryOperatorChoiceBox.setValue(operator.getNationality());
+            }
+
+            if (operator.getLocation() != null) {
+                locationCheckBox.setSelected(true);
+                Location loc = operator.getLocation();
+                xLocOperatorEnterTextField.setText(String.valueOf(loc.getX()));
+                yLocOperatorEnterTextField.setText(String.valueOf(loc.getY()));
+                zLocOperatorEnterTextField.setText(String.valueOf(loc.getZ()));
+            }
+        }
+        updateOperatorFields();
+        updateEyeColorFields();
+        updateCountryFields();
+        updateLocationFields();
+    }
+
     private Location createLocation() throws IllegalArgumentException {
         Location location = new Location();
 

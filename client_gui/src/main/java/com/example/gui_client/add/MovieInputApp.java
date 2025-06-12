@@ -9,16 +9,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MovieInputApp extends Application {
 
     private MovieInputController controller;
     private Stage primaryStage;
-    private Locale currentLocale = new Locale("ru");
+    private Movie createdMovie = null;
+    private boolean movieCreated = false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -41,7 +43,17 @@ public class MovieInputApp extends Application {
         Scene scene = new Scene(mainLayout, 500, 800);
         primaryStage.setTitle(bundle.getString("add_movie_window_title"));
         primaryStage.setScene(scene);
-        primaryStage.show();
+
+        // Делаем окно модальным
+        primaryStage.initModality(Modality.APPLICATION_MODAL);
+
+        // Предотвращаем закрытие окна до создания фильма
+        primaryStage.setOnCloseRequest(e -> {
+            if (!movieCreated) {
+                e.consume(); // Отменяем закрытие
+                showWarningAlert("Внимание", "Необходимо создать фильм перед закрытием окна");
+            }
+        });
     }
 
     private VBox createControlPanel() {
@@ -49,22 +61,33 @@ public class MovieInputApp extends Application {
         VBox controlPanel = new VBox(10);
         controlPanel.setStyle("-fx-padding: 10;");
 
-
         // Кнопка создания фильма
         Button createButton = new Button(bundle.getString("create_movie"));
         createButton.setOnAction(e -> createMovie());
 
-        controlPanel.getChildren().addAll(createButton);
+        // Кнопка отмены
+        Button cancelButton = new Button("Отмена");
+        cancelButton.setOnAction(e -> {
+            movieCreated = true; // Позволяем закрыть окно
+            createdMovie = null; // Устанавливаем null как результат
+            primaryStage.close();
+        });
+
+        controlPanel.getChildren().addAll(createButton, cancelButton);
         return controlPanel;
     }
 
     private void createMovie() {
         try {
             Movie movie = controller.createMovie();
+            createdMovie = movie;
+            movieCreated = true;
+            showSuccessAlert("Успех", "Фильм успешно создан!");
+            primaryStage.close();
         } catch (IllegalArgumentException e) {
-            showErrorAlert("Input Error", e.getMessage());
+            showErrorAlert("Ошибка ввода", e.getMessage());
         } catch (Exception e) {
-            showErrorAlert("Unexpected Error", "An unexpected error occurred: " + e.getMessage());
+            showErrorAlert("Неожиданная ошибка", "Произошла неожиданная ошибка: " + e.getMessage());
         }
     }
 
@@ -82,6 +105,45 @@ public class MovieInputApp extends Application {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public static Optional<Movie> showMovieEditDialog(Movie movieToEdit) {
+        try {
+            MovieInputApp app = new MovieInputApp();
+            Stage stage = new Stage();
+            app.start(stage);
+
+            // Передаем данные фильма в контроллер перед показом окна
+            app.controller.populateFields(movieToEdit);
+
+            stage.showAndWait();
+            return Optional.ofNullable(app.createdMovie);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    private void showWarningAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static Optional<Movie> showMovieInputDialog() {
+        try {
+            MovieInputApp app = new MovieInputApp();
+            Stage stage = new Stage();
+            app.start(stage);
+            stage.showAndWait(); // Теперь это безопасно, так как show() не вызывался ранее
+
+            return Optional.ofNullable(app.createdMovie);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
     public static void main(String[] args) {

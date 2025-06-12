@@ -40,90 +40,15 @@
                                 <MenuItem fx:id="mexicanMenuItem" mnemonicParsing="false" text="Испанский (Мексика)" />
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Команда">
+                        <Menu fx:id="commandOCHKA" mnemonicParsing="false" text="Команда">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="Справка по командам" />
-                                <MenuItem mnemonicParsing="false" text="Информация о коллекции" />
-                                <MenuItem mnemonicParsing="false" text="Добавить элемент" />
-                                <MenuItem mnemonicParsing="false" text="Удалить элемент по id" />
-                                <MenuItem mnemonicParsing="false" text="Удалить элемент по индексу" />
-                                <MenuItem mnemonicParsing="false" text="Удалить первый элемент" />
-                                <MenuItem mnemonicParsing="false" text="Удалить элементы меньшие чем..." />
-                                <MenuItem mnemonicParsing="false" text="Выполнить скрипт" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Фильтр">
-                            <items>
-                                <Menu mnemonicParsing="false" text="По id">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" text="Action 1" />
-                                    </items>
-                                </Menu>
-                                <MenuItem fx:id="idUbMenuItem" mnemonicParsing="false" text="По убыванию" />
-                                <MenuItem fx:id="idVoMenuItem" mnemonicParsing="false" text="По возрастанию" />
-                                <Menu mnemonicParsing="false" text="По имени владельца">
-                                    <items>
-                                        <MenuItem fx:id="ownerUbMenuItem" mnemonicParsing="false" text="По убыванию" />
-                                        <MenuItem fx:id="ownerVoMenuItem" mnemonicParsing="false" text="По возрастанию" />
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="false" text="По названию">
-                                    <items>
-                                        <MenuItem fx:id="nameUbMenuItem" mnemonicParsing="false" text="По убыванию" />
-                                        <MenuItem fx:id="nameVoMenuItem" mnemonicParsing="false" text="По возрастанию" />
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="false" text="По координатам">
-                                    <items>
-                                        <MenuItem fx:id="coordinatesUbMenuItem" mnemonicParsing="false" text="По убыванию" />
-                                        <MenuItem fx:id="coordinatesVoMenuItem" mnemonicParsing="false" text="По возрастанию" />
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="false" text="По дате создания">
-                                    <items>
-                                        <MenuItem fx:id="dateUbMenuItem" mnemonicParsing="false" text="По убыванию" />
-                                        <MenuItem fx:id="dateVoMenuItem" mnemonicParsing="false" text="По возрастанию" />
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="false" text="По количеству оскаров">
-                                    <items>
-                                        <MenuItem fx:id="oscarUbMenuItem" mnemonicParsing="false" text="По убыванию" />
-                                        <MenuItem fx:id="oscarVoMenuItem" mnemonicParsing="false" text="По возрастанию" />
-                                    </items>
-                                </Menu>
-                                <MenuItem fx:id="genreMenuItem" mnemonicParsing="false" text="По жанру" />
-                                <Menu mnemonicParsing="false" text="По возрастному ограничению">
-                                    <items>
-                                        <MenuItem fx:id="mpaaUbMenuItem" mnemonicParsing="false" text="По убыванию" />
-                                        <MenuItem fx:id="mpaaVoMenuItem" mnemonicParsing="false" text="По возрастанию" />
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="false" text="По оператору">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                                        <Menu mnemonicParsing="false" text="По имени">
-                                            <items>
-                                                <MenuItem fx:id="operatorNameUbMenuItem" mnemonicParsing="false" text="По убыванию" />
-                                                <MenuItem fx:id="operatorNameVoMenuItem" mnemonicParsing="false" text="По возрастанию" />
-                                            </items>
-                                        </Menu>
-                                        <Menu mnemonicParsing="false" text="По росту">
-                                            <items>
-                                                <MenuItem fx:id="heightUbMenuItem" mnemonicParsing="false" text="По убыванию" />
-                                                <MenuItem fx:id="heightVoMenuItem" mnemonicParsing="false" text="По возрастанию" />
-                                            </items>
-                                        </Menu>
-                                        <MenuItem fx:id="hairMenuItem" mnemonicParsing="false" text="По цвету волос" />
-                                        <MenuItem fx:id="eyeMenuItem" mnemonicParsing="false" text="По цвету глаз" />
-                                        <MenuItem fx:id="countryMenuItem" mnemonicParsing="false" text="По стране" />
-                                        <Menu mnemonicParsing="false" text="По локации">
-                                            <items>
-                                                <MenuItem fx:id="locationUbMenuItem" mnemonicParsing="false" text="По убыванию" />
-                                                <MenuItem fx:id="locationVoMenuItem" mnemonicParsing="false" text="По возрастанию" />
-                                            </items>
-                                        </Menu>
-                                    </items>
-                                </Menu>
+                                <MenuItem fx:id="help" mnemonicParsing="false" text="Справка по командам" />
+                                <MenuItem fx:id="info" mnemonicParsing="false" text="Информация о коллекции" />
+                                <MenuItem fx:id="add" mnemonicParsing="false" text="Добавить элемент" />
+                                <MenuItem fx:id="remove_by_id" mnemonicParsing="false" text="Удалить элемент по id" />
+                                <MenuItem fx:id="remove_first" mnemonicParsing="false" text="Удалить первый элемент" />
+                                <MenuItem fx:id="remove_lower" mnemonicParsing="false" text="Удалить элементы меньшие чем..." />
+                                <MenuItem fx:id="execute_script" mnemonicParsing="false" text="Выполнить скрипт" />
                             </items>
                         </Menu>
                     </menus>
