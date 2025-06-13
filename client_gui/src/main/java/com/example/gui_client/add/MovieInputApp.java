@@ -35,7 +35,6 @@ public class MovieInputApp extends Application {
 
         controller = loader.getController();
 
-        // Добавляем кнопки управления
         VBox mainLayout = new VBox(10);
         mainLayout.getChildren().add(createControlPanel());
         mainLayout.getChildren().add(root);
@@ -44,10 +43,8 @@ public class MovieInputApp extends Application {
         primaryStage.setTitle(bundle.getString("add_movie_window_title"));
         primaryStage.setScene(scene);
 
-        // Делаем окно модальным
         primaryStage.initModality(Modality.APPLICATION_MODAL);
 
-        // Предотвращаем закрытие окна до создания фильма
         primaryStage.setOnCloseRequest(e -> {
             if (!movieCreated) {
                 e.consume(); // Отменяем закрытие

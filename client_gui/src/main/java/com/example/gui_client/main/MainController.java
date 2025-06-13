@@ -11,6 +11,7 @@ import entities.classes.Location;
 import entities.classes.Movie;
 import entities.classes.Person;
 import entities.enums.*;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -25,14 +26,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
 
@@ -51,7 +51,7 @@ public class MainController implements Initializable {
     @FXML private Tab tableTab;
     @FXML private Tab vizuslisationTab;
 
-    @FXML private TableView<MovieData> tableView; // Убедитесь, что fx:id="tableView" в FXML
+    @FXML private TableView<MovieData> tableView;
     @FXML private TableColumn<MovieData, String> idTableColumn;
     @FXML private TableColumn<MovieData, String> ownerTableColumn;
     @FXML private TableColumn<MovieData, String> filmNameTableColumn;
@@ -75,7 +75,6 @@ public class MainController implements Initializable {
 
     @FXML private Canvas vizualCanvas;
 
-    // Добавленные поля для команд
     @FXML private MenuItem help;
     @FXML private MenuItem info;
     @FXML private MenuItem add;
@@ -87,15 +86,16 @@ public class MainController implements Initializable {
 
     private final ObservableList<MovieData> movieDataList = FXCollections.observableArrayList();
     private ResourceBundle currentBundle;
+    private final Map<String, Color> userColors = new HashMap<>();
+    private final Random random = new Random();
+    private final Map<Integer, MovieData> movieMap = new HashMap<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Установка данных в таблицу должна быть первой, чтобы избежать NPE
         if (tableView != null) {
             tableView.setItems(movieDataList);
         } else {
             System.err.println("CRITICAL ERROR: tableView is null. Check fx:id in main.fxml!");
-            // Дальнейшее выполнение бессмысленно, если таблицы нет
             return;
         }
 
@@ -110,18 +110,168 @@ public class MainController implements Initializable {
         Platform.runLater(this::loadData);
     }
 
-    // Новый метод для настройки контекстного меню
+    private void setupVisualization() {
+        if (vizualCanvas != null) {
+            GraphicsContext gc = vizualCanvas.getGraphicsContext2D();
+            gc.clearRect(0, 0, vizualCanvas.getWidth(), vizualCanvas.getHeight());
+
+            vizualCanvas.setOnMouseClicked(event -> {
+                double x = event.getX();
+                double y = event.getY();
+
+                for (MovieData movie : movieDataList) {
+                    try {
+                        int id = Integer.parseInt(movie.idProperty().get());
+                        double size = getSizeFromMpaa(movie.mpaaRatingProperty().get());
+                        double movieX = Double.parseDouble(movie.xCoordinateProperty().get());
+                        double movieY = Double.parseDouble(movie.yCoordinateProperty().get());
+
+                        double canvasX = normalizeCoordinate(movieX, vizualCanvas.getWidth(), size);
+                        double canvasY = normalizeCoordinate(movieY, vizualCanvas.getHeight(), size);
+
+                        if (x >= canvasX && x <= canvasX + size &&
+                                y >= canvasY && y <= canvasY + size) {
+                            showMovieInfo(movie);
+                            break;
+                        }
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                }
+            });
+        }
+    }
+
+    private double normalizeCoordinate(double value, double max, double size) {
+        return (value % (max - size));
+    }
+
+    private double getSizeFromMpaa(String mpaaRating) {
+        switch (mpaaRating) {
+            case "PG": return 30;
+            case "PG_13": return 50;
+            case "R": return 70;
+            case "NC_17": return 90;
+            default: return 30;
+        }
+    }
+
+    private Color getUserColor(String username) {
+        if (!userColors.containsKey(username)) {
+            userColors.put(username, Color.color(
+                    random.nextDouble(),
+                    random.nextDouble(),
+                    random.nextDouble(),
+                    0.7
+            ));
+        }
+        return userColors.get(username);
+    }
+
+    private void drawMovies() {
+        if (vizualCanvas == null) return;
+
+        GraphicsContext gc = vizualCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, vizualCanvas.getWidth(), vizualCanvas.getHeight());
+
+        List<MovieData> sortedMovies = movieDataList.stream()
+                .sorted(Comparator.comparing(m -> m.mpaaRatingProperty().get()))
+                .collect(Collectors.toList());
+
+        for (MovieData movie : sortedMovies) {
+            try {
+                String mpaa = movie.mpaaRatingProperty().get();
+                double size = getSizeFromMpaa(mpaa);
+                double x = Double.parseDouble(movie.xCoordinateProperty().get());
+                double y = Double.parseDouble(movie.yCoordinateProperty().get());
+                String owner = movie.ownerProperty().get();
+                Color color = getUserColor(owner);
+
+                double canvasX = normalizeCoordinate(x, vizualCanvas.getWidth(), size);
+                double canvasY = normalizeCoordinate(y, vizualCanvas.getHeight(), size);
+
+                gc.setFill(color);
+                gc.fillRect(canvasX, canvasY, size, size);
+
+                gc.setStroke(Color.BLACK);
+                gc.setLineWidth(1);
+                gc.strokeRect(canvasX, canvasY, size, size);
+
+                FadeTransition ft = new FadeTransition(Duration.millis(10000), vizualCanvas);
+                ft.setFromValue(0.0);
+                ft.setToValue(1.0);
+                ft.play();
+
+            } catch (NumberFormatException e) {
+                continue;
+            }
+        }
+    }
+
+    private void showMovieInfo(MovieData movie) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(movie.filmNameProperty().get());
+        alert.setHeaderText("Movie Details");
+
+        StringBuilder content = new StringBuilder();
+        content.append("ID: ").append(movie.idProperty().get()).append("\n");
+        content.append("Owner: ").append(movie.ownerProperty().get()).append("\n");
+        content.append("Name: ").append(movie.filmNameProperty().get()).append("\n");
+        content.append("Coordinates: (").append(movie.xCoordinateProperty().get())
+                .append(", ").append(movie.yCoordinateProperty().get()).append(")\n");
+        content.append("MPAA Rating: ").append(movie.mpaaRatingProperty().get()).append("\n");
+        content.append("Genre: ").append(movie.genreProperty().get()).append("\n");
+
+        alert.setContentText(content.toString());
+        alert.showAndWait();
+    }
+
+    private void parseAndLoadData(String csvData) {
+        movieDataList.clear();
+        movieMap.clear();
+
+        String[] lines = csvData.trim().split("\n");
+
+        for (String line : lines) {
+            if (line.trim().isEmpty()) continue;
+
+            String[] values = line.split(",");
+            if (values.length >= 17) {
+                for (int i = 0; i < values.length; i++) {
+                    if ("null".equalsIgnoreCase(values[i].trim())) {
+                        values[i] = "";
+                    }
+                }
+                MovieData movie = new MovieData(
+                        values[0], values[1], values[2], values[3], values[4],
+                        values[5], values[6], values[7], values[8], values[9],
+                        values[10], values[11], values[12], values[13], values[14],
+                        values[15], values[16]
+                );
+                movieDataList.add(movie);
+                try {
+                    movieMap.put(Integer.parseInt(values[0]), movie);
+                } catch (NumberFormatException e) {
+                    // Пропускаем некорректные ID
+                }
+            }
+        }
+
+        Platform.runLater(this::drawMovies);
+    }
+
     private void setupTableContextMenu() {
-        // Создаем контекстное меню для таблицы
         ContextMenu contextMenu = new ContextMenu();
+
         MenuItem editItem = new MenuItem(getLocalizedText("edit"));
         editItem.setOnAction(event -> handleEditAction());
-        contextMenu.getItems().add(editItem);
 
-        // Устанавливаем контекстное меню для таблицы
+        MenuItem removeItem = new MenuItem(getLocalizedText("remove"));
+        removeItem.setOnAction(event -> handleRemoveAction());
+
+        contextMenu.getItems().addAll(editItem, removeItem);
         tableView.setContextMenu(contextMenu);
 
-        // Также добавим обработчик для правого клика по строке
         tableView.setRowFactory(tv -> {
             TableRow<MovieData> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -131,6 +281,40 @@ public class MainController implements Initializable {
             });
             return row;
         });
+    }
+
+    private void handleRemoveAction() {
+        MovieData selected = tableView.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            if (selected.ownerProperty().get().equals(GuiApp.username)) {
+                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation.setTitle(getLocalizedText("confirmation"));
+                confirmation.setHeaderText(getLocalizedText("confirm_remove"));
+                confirmation.setContentText(getLocalizedText("remove_movie") + " ID: " + selected.idProperty().get());
+
+                Optional<ButtonType> result = confirmation.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    try {
+                        CommandBuffer command = new CommandBuffer("remove_by_id");
+                        command.setLogin(GuiApp.username);
+                        command.setPassword(GuiApp.username);
+                        command.setArg(selected.idProperty().get());
+                        ServerAnswerBuffer response = GuiApp.udpClient.sendCommand(command);
+
+                        if (response.getAnswerStatus() == AnswerStatus.OK) {
+                            loadData();
+                            showSuccessMessage(getLocalizedText("movie_removed"));
+                        } else {
+                            showErrorMessage(getLocalizedText("error") + ": " + response.getComment());
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        showErrorMessage(getLocalizedText("error") + ": " + e.getMessage());
+                    }
+                }
+            } else {
+                showErrorMessage(getLocalizedText("remove_own_only_err"));
+            }
+        }
     }
 
     private void handleEditAction() {
@@ -159,7 +343,6 @@ public class MainController implements Initializable {
 
     private void updateUITexts() {
         Platform.runLater(() -> {
-            // Проверяем на null перед использованием
             if (languageMenu != null) languageMenu.setText(getLocalizedText("language"));
             if (russianMenuItem != null) russianMenuItem.setText(getLocalizedText("russian"));
             if (icelandMenuItem != null) icelandMenuItem.setText(getLocalizedText("icelandic"));
@@ -172,7 +355,6 @@ public class MainController implements Initializable {
             if (tableTab != null) tableTab.setText(getLocalizedText("table_view"));
             if (vizuslisationTab != null) vizuslisationTab.setText(getLocalizedText("visualization"));
 
-            // Обновляем заголовки колонок
             updateColumnText(idTableColumn, "id");
             updateColumnText(ownerTableColumn, "owner");
             updateColumnText(filmNameTableColumn, "film_name");
@@ -201,10 +383,14 @@ public class MainController implements Initializable {
             if (remove_first != null) remove_first.setText(getLocalizedText("remove_first"));
             if (remove_lower != null) remove_lower.setText(getLocalizedText("remove_lower"));
             if (execute_script != null) execute_script.setText(getLocalizedText("execute_script"));
+            MenuItem editItem = new MenuItem(getLocalizedText("edit"));
+            editItem.setOnAction(event -> handleEditAction());
+
+            MenuItem removeItem = new MenuItem(getLocalizedText("remove"));
+            removeItem.setOnAction(event -> handleRemoveAction());
         });
     }
 
-    // Вспомогательный метод для безопасного обновления текста колонки
     private void updateColumnText(TableColumn<?, ?> column, String key) {
         if (column != null) {
             column.setText(getLocalizedText(key));
@@ -215,15 +401,13 @@ public class MainController implements Initializable {
         try {
             return currentBundle.getString(key);
         } catch (MissingResourceException e) {
-            return "!" + key + "!"; // Возвращаем ключ, чтобы было видно, чего не хватает
+            return "!" + key + "!";
         }
     }
 
     private void setupTableColumns() {
-        // Проверка уже сделана в initialize, но для надежности можно оставить
         if (tableView == null) return;
 
-        // Привязка данных к колонкам (CellValueFactory)
         idTableColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty());
         ownerTableColumn.setCellValueFactory(cellData -> cellData.getValue().ownerProperty());
         filmNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().filmNameProperty());
@@ -256,7 +440,6 @@ public class MainController implements Initializable {
             }
         });
 
-        // Обработчики для команд
         if (help != null) help.setOnAction(e -> handleHelpCommand());
         if (info != null) info.setOnAction(e -> handleInfoCommand());
         if (add != null) add.setOnAction(e -> handleAddCommand());
@@ -283,60 +466,18 @@ public class MainController implements Initializable {
         app.start(new Stage());
     }
 
-    private void setupVisualization() {
-        if (vizualCanvas != null) {
-            GraphicsContext gc = vizualCanvas.getGraphicsContext2D();
-            gc.setFill(Color.LIGHTBLUE);
-            gc.fillRect(0, 0, vizualCanvas.getWidth(), vizualCanvas.getHeight());
-            gc.setFill(Color.BLACK);
-            gc.fillText("Visualization will be implemented here", 50, 50);
-        }
-    }
-
     private void loadData() {
         CommandBuffer message = new CommandBuffer("show");
         try {
             ServerAnswerBuffer answerBuffer = GuiApp.udpClient.sendCommand(message);
             String csvData = answerBuffer.getComment();
             parseAndLoadData(csvData);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | ClassNotFoundException e) {
+            showErrorMessage("Error loading data: " + e.getMessage());
         }
-    }
-
-    private void parseAndLoadData(String csvData) {
-        // Используем movieDataList, который уже привязан к таблице
-        movieDataList.clear(); // Очищаем старые данные
-
-        String[] lines = csvData.trim().split("\n");
-
-        for (String line : lines) {
-            if (line.trim().isEmpty()) continue;
-
-            String[] values = line.split(",");
-            if (values.length >= 17) {
-                // Заменяем "null" строки на пустые строки
-                for (int i = 0; i < values.length; i++) {
-                    if ("null".equalsIgnoreCase(values[i].trim())) {
-                        values[i] = "";
-                    }
-                }
-                MovieData movie = new MovieData(
-                        values[0], values[1], values[2], values[3], values[4],
-                        values[5], values[6], values[7], values[8], values[9],
-                        values[10], values[11], values[12], values[13], values[14],
-                        values[15], values[16]
-                );
-                movieDataList.add(movie);
-            }
-        }
-        System.out.println("Данные успешно загружены. Загружено объектов: " + movieDataList.size());
     }
 
     private void handleAddCommand() {
-        System.out.println("add");
         Optional<Movie> movieResult = MovieInputApp.showMovieInputDialog();
 
         if (movieResult.isPresent()) {
@@ -351,27 +492,23 @@ public class MainController implements Initializable {
                 ServerAnswerBuffer response = GuiApp.udpClient.sendCommand(addCommand);
 
                 if (response.getAnswerStatus() == AnswerStatus.OK) {
-                    // Успешно добавлен, обновляем таблицу
                     loadData();
-                    showSuccessMessage("Фильм успешно добавлен!");
+                    showSuccessMessage("Movie added successfully!");
                 } else {
-                    showErrorMessage("Ошибка при добавлении фильма: " + response.getComment());
+                    showErrorMessage("Error adding movie: " + response.getComment());
                 }
 
             } catch (IOException | ClassNotFoundException e) {
-                showErrorMessage("Ошибка соединения с сервером: " + e.getMessage());
+                showErrorMessage("Connection error: " + e.getMessage());
                 e.printStackTrace();
             }
-        } else {
-            System.out.println("Добавление фильма отменено пользователем");
         }
     }
 
-    // Добавьте эти вспомогательные методы в MainController
     private void showSuccessMessage(String message) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Успех");
+            alert.setTitle("Success");
             alert.setHeaderText(null);
             alert.setContentText(message);
             alert.showAndWait();
@@ -381,7 +518,7 @@ public class MainController implements Initializable {
     private void showErrorMessage(String message) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Ошибка");
+            alert.setTitle("Error");
             alert.setHeaderText(null);
             alert.setContentText(message);
             alert.showAndWait();
@@ -390,16 +527,11 @@ public class MainController implements Initializable {
 
     private void editMovie(MovieData movieData) {
         try {
-            // Создаем объект Movie из данных таблицы
             Movie movieToEdit = parseMovieFromTableData(movieData);
-
-            // Открываем окно редактирования с текущими данными
             Optional<Movie> editedMovie = MovieInputApp.showMovieEditDialog(movieToEdit);
 
             if (editedMovie.isPresent()) {
-                // Отправляем команду обновления на сервер
                 CommandBuffer updateCommand = new CommandBuffer("update");
-
                 updateCommand.setLogin(GuiApp.username);
                 updateCommand.setPassword(GuiApp.username);
                 Movie movie = editedMovie.get();
@@ -410,7 +542,7 @@ public class MainController implements Initializable {
                 ServerAnswerBuffer updateResponse = GuiApp.udpClient.sendCommand(updateCommand);
 
                 if (updateResponse.getAnswerStatus() == AnswerStatus.OK) {
-                    loadData(); // Обновляем таблицу
+                    loadData();
                     showSuccessMessage(getLocalizedText("movie_updated"));
                 } else {
                     showErrorMessage(updateResponse.getComment());
@@ -424,32 +556,25 @@ public class MainController implements Initializable {
 
     private Movie parseMovieFromTableData(MovieData data) {
         Movie movie = new Movie();
-
-        // Основные поля
         movie.setName(data.filmNameProperty().get());
 
-        // Координаты
         Coordinates coordinates = new Coordinates();
         coordinates.setX(Long.parseLong(data.xCoordinateProperty().get()));
         coordinates.setY(Long.parseLong(data.yCoordinateProperty().get()));
         movie.setCoordinates(coordinates);
 
-        // Оскары (может быть null)
         String oscars = data.oscarCountProperty().get();
         if (!oscars.isEmpty()) {
             movie.setOscarsCount(Long.parseLong(oscars));
         }
 
-        // Жанр (может быть null)
         String genre = data.genreProperty().get();
         if (!genre.isEmpty()) {
             movie.setGenre(MovieGenre.valueOf(genre));
         }
 
-        // MPAA рейтинг
         movie.setMpaaRating(MpaaRating.valueOf(data.mpaaRatingProperty().get()));
 
-        // Оператор (может быть null)
         String operatorName = data.operatorNameProperty().get();
         if (!operatorName.isEmpty()) {
             Person operator = new Person();
@@ -457,19 +582,16 @@ public class MainController implements Initializable {
             operator.setHeight(Integer.parseInt(data.operatorHeightProperty().get()));
             operator.setHairColor(HairColor.valueOf(data.operatorHairColorProperty().get()));
 
-            // Цвет глаз (может быть null)
             String eyeColor = data.operatorEyeColorProperty().get();
             if (!eyeColor.isEmpty()) {
                 operator.setEyeColor(EyeColor.valueOf(eyeColor));
             }
 
-            // Страна (может быть null)
             String country = data.operatorCountryProperty().get();
             if (!country.isEmpty()) {
                 operator.setNationality(Country.valueOf(country));
             }
 
-            // Локация (может быть null)
             String xLoc = data.operatorLocationXProperty().get();
             String yLoc = data.operatorLocationYProperty().get();
             String zLoc = data.operatorLocationZProperty().get();
@@ -487,6 +609,7 @@ public class MainController implements Initializable {
 
         return movie;
     }
+
     private void handleHelpCommand() {
         try {
             CommandBuffer command = new CommandBuffer("help");
@@ -622,9 +745,10 @@ public class MainController implements Initializable {
         }
     }
 
-    // Внутренний класс для хранения данных одного фильма
     public static class MovieData {
-        private final SimpleStringProperty id, owner, filmName, xCoordinate, yCoordinate, creationDate, oscarCount, genre, mpaaRating, operatorName, operatorHeight, operatorEyeColor, operatorHairColor, operatorCountry, operatorLocationX, operatorLocationY, operatorLocationZ;
+        private final SimpleStringProperty id, owner, filmName, xCoordinate, yCoordinate, creationDate,
+                oscarCount, genre, mpaaRating, operatorName, operatorHeight, operatorEyeColor,
+                operatorHairColor, operatorCountry, operatorLocationX, operatorLocationY, operatorLocationZ;
 
         public MovieData(String id, String owner, String filmName, String xCoordinate, String yCoordinate,
                          String creationDate, String oscarCount, String genre, String mpaaRating,
@@ -650,7 +774,6 @@ public class MainController implements Initializable {
             this.operatorLocationZ = new SimpleStringProperty(operatorLocationZ);
         }
 
-        // Property-геттеры для привязки к TableView
         public SimpleStringProperty idProperty() { return id; }
         public SimpleStringProperty ownerProperty() { return owner; }
         public SimpleStringProperty filmNameProperty() { return filmName; }
